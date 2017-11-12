@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaobaidu.baseframe.modules.mall.dao.BannerDao">
+    
+	<sql id="bannerColumns">
+		a.id AS "id",
+		a.image_url AS "imageUrl",
+		a.link_url AS "linkUrl",
+		a.description AS "description",
+		a.pos AS "pos",
+		a.creator AS "creator",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="bannerJoins">
+	</sql>
+    
+	<select id="get" resultType="Banner">
+		SELECT 
+			<include refid="bannerColumns"/>
+		FROM banner a
+		<include refid="bannerJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="Banner">
+		SELECT 
+			<include refid="bannerColumns"/>
+		FROM banner a
+		<include refid="bannerJoins"/>
+		<where>
+			
+			<if test="imageUrl != null and imageUrl != ''">
+				AND a.image_url = #{imageUrl}
+			</if>
+			<if test="description != null and description != ''">
+				AND a.description = #{description}
+			</if>
+		</where>
+		order by pos ASC
+	</select>
+	
+	<select id="findAllList" resultType="Banner">
+		SELECT 
+			<include refid="bannerColumns"/>
+		FROM banner a
+		<include refid="bannerJoins"/>
+		<where>
+			
+		</where>
+		order by pos ASC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO banner(
+			id,
+			image_url,
+			link_url,
+			description,
+			pos,
+			creator,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{imageUrl},
+			#{linkUrl},
+			#{description},
+			#{pos},
+			#{creator},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE banner SET 	
+			image_url = #{imageUrl},
+			link_url = #{linkUrl},
+			description = #{description},
+			pos = #{pos},
+			creator = #{creator},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<delete id="delete">
+		DELETE FROM banner
+		WHERE id = #{id}
+	</delete>
+	
+</mapper>

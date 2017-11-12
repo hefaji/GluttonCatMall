@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaobaidu.baseframe.modules.mall.dao.CommImagesDao">
+    
+	<sql id="commImagesColumns">
+		a.id AS "id",
+		a.comm_code AS "commCode",
+		a.image_path AS "imagePath",
+		a.big_image AS "bigImage",
+		a.middle_image AS "middleImage",
+		a.small_image AS "smallImage",
+		a.icon AS "icon",
+		a.creator AS "creator",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="commImagesJoins">
+	</sql>
+    
+	<select id="get" resultType="CommImages">
+		SELECT 
+			<include refid="commImagesColumns"/>
+		FROM comm_images a
+		<include refid="commImagesJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommImages">
+		SELECT 
+			<include refid="commImagesColumns"/>
+		FROM comm_images a
+		<include refid="commImagesJoins"/>
+		<where>
+			
+			<if test="commCode != null and commCode != ''">
+				AND a.comm_code LIKE 
+					<if test="dbName == 'oracle'">'%'||#{commCode}||'%'</if>
+					<if test="dbName == 'mssql'">'%'+#{commCode}+'%'</if>
+					<if test="dbName == 'mysql'">concat('%',#{commCode},'%')</if>
+			</if>
+		</where>
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<select id="findAllList" resultType="CommImages">
+		SELECT 
+			<include refid="commImagesColumns"/>
+		FROM comm_images a
+		<include refid="commImagesJoins"/>
+		<where>
+			
+		</where>		
+		<choose>
+			<when test="page !=null and page.orderBy != null and page.orderBy != ''">
+				ORDER BY ${page.orderBy}
+			</when>
+			<otherwise>
+			</otherwise>
+		</choose>
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO comm_images(
+			id,
+			comm_code,
+			image_path,
+			big_image,
+			middle_image,
+			small_image,
+			icon,
+			creator,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{commCode},
+			#{imagePath},
+			#{bigImage},
+			#{middleImage},
+			#{smallImage},
+			#{icon},
+			#{creator},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE comm_images SET 	
+			comm_code = #{commCode},
+			image_path = #{imagePath},
+			big_image = #{bigImage},
+			middle_image = #{middleImage},
+			small_image = #{smallImage},
+			icon = #{icon},
+			creator = #{creator},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM comm_images
+		WHERE id = #{id}
+	</update>
+
+	<select id="findByCommCode" resultType="CommImages">
+		SELECT
+		<include refid="commImagesColumns"/>
+		FROM comm_images a
+		<include refid="commImagesJoins"/>
+
+		where comm_code = #{commCode}
+	</select>
+	
+</mapper>

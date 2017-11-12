@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaobaidu.baseframe.modules.mall.dao.CommTypeDao">
+    
+	<sql id="commTypeColumns">
+		a.id AS "id",
+		a.parent_id AS "parent.id",
+		a.parent_ids AS parentIds,
+		a.name AS "name",
+		a.hot AS "hot",
+		a.pos AS "pos",
+		a.image AS "image",
+		a.creator AS "creator",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="commTypeJoins">
+	</sql>
+    
+	<select id="get" resultType="CommType">
+		SELECT 
+			<include refid="commTypeColumns"/>
+		FROM comm_type a
+		<include refid="commTypeJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+
+	
+	<select id="findAllList" resultType="CommType">
+		SELECT 
+			<include refid="commTypeColumns"/>
+		FROM comm_type a
+		<include refid="commTypeJoins"/>
+		<where>
+		</where>
+		ORDER BY pos
+	</select>
+	
+	<select id="findByParentIdsLike" resultType="CommType">
+		SELECT
+			a.id,
+			a.parent_id AS "parent.id",
+			a.parent_ids
+		FROM comm_type a
+		<include refid="commTypeJoins"/>
+		<where>
+			
+			AND a.parent_ids LIKE #{parentIds}
+		</where>
+		ORDER BY pos
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO comm_type(
+			id,
+			parent_id,
+			parent_ids,
+			name,
+			hot,
+			pos,
+			image,
+			creator,
+			create_time,
+			update_time
+		) VALUES (
+			#{id},
+			#{parent.id},
+			#{parentIds},
+			#{name},
+			#{hot},
+			#{pos},
+			#{image},
+			#{creator},
+			#{createTime},
+			#{updateTime}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE comm_type SET 	
+			parent_id = #{parent.id},
+			name = #{name},
+			hot = #{hot},
+			pos = #{pos},
+			image = #{image},
+			creator = #{creator},
+			create_time = #{createTime},
+			update_time = #{updateTime}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="updateParentIds">
+		UPDATE comm_type SET 
+			parent_id = #{parent.id},
+			parent_ids = #{parentIds}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM comm_type
+		WHERE id = #{id} OR parent_ids LIKE #{parentIds}
+	</update>
+
+	<select id="findLevelOneList"  resultType="CommType" >
+		SELECT id , name FROM comm_type WHERE  parent_id = '0' ORDER BY pos
+	</select>
+
+	<select id="findLevelTwoList"  resultType="CommType" >
+		SELECT id , name FROM comm_type WHERE  parent_id != '0'ORDER BY pos
+	</select>
+	
+</mapper>

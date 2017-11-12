@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.xiaobaidu.baseframe.modules.mall.dao.CommThemeEventDetailDao">
+    
+	<sql id="commThemeEventDetailColumns">
+		a.id AS "id",
+		a.event_id AS "eventId",
+		e.name AS "eventName",
+		a.relate_comm_code AS "relateCommCode",
+		a.theme_sell_price AS "themeSellPrice",
+		a.pos AS "pos",
+		a.enable AS "enable",
+		a.creator AS "creator",
+		a.create_time AS "createTime",
+		a.update_time AS "updateTime"
+	</sql>
+	
+	<sql id="commThemeEventDetailJoins">
+		left JOIN comm_theme_event e ON e.id = a.event_id
+	</sql>
+    
+	<select id="get" resultType="CommThemeEventDetail">
+		SELECT 
+			<include refid="commThemeEventDetailColumns"/>
+		FROM comm_theme_event_detail a
+		<include refid="commThemeEventDetailJoins"/>
+		WHERE a.id = #{id}
+	</select>
+	
+	<select id="findList" resultType="CommThemeEventDetail">
+		SELECT 
+			<include refid="commThemeEventDetailColumns"/>
+		FROM comm_theme_event_detail a
+		<include refid="commThemeEventDetailJoins"/>
+		<where>
+			
+			<if test="eventId != null and eventId != ''">
+				AND a.event_id = #{eventId}
+			</if>
+		</where>
+				ORDER BY pos ASC
+	</select>
+	
+	<select id="findAllList" resultType="CommThemeEventDetail">
+		SELECT 
+			<include refid="commThemeEventDetailColumns"/>
+		FROM comm_theme_event_detail a
+		<include refid="commThemeEventDetailJoins"/>
+		<where>
+			
+		</where>		
+				ORDER BY pos ASC
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO comm_theme_event_detail(
+			id,
+			event_id,
+			relate_comm_code,
+			theme_sell_price,
+			pos,
+			enable
+		) VALUES (
+			#{id},
+			#{eventId},
+			#{relateCommCode},
+			#{themeSellPrice},
+			#{pos},
+			#{enable}
+		)
+	</insert>
+	
+	<update id="update">
+		UPDATE comm_theme_event_detail SET 	
+			event_id = #{eventId},
+			relate_comm_code = #{relateCommCode},
+			theme_sell_price = #{themeSellPrice},
+			pos = #{pos},
+			enable = #{enable}
+		WHERE id = #{id}
+	</update>
+	
+	<update id="delete">
+		DELETE FROM comm_theme_event_detail
+		WHERE id = #{id}
+	</update>
+	
+</mapper>
